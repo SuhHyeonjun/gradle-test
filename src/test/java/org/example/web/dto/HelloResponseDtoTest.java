@@ -1,8 +1,7 @@
-package org.example.dto;
+package org.example.web.dto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.example.web.dto.HelloResponseDto;
 import org.junit.Test;
 
 public class HelloResponseDtoTest {
