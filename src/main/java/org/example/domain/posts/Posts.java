@@ -9,13 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import org.example.domain.BaseTimeEntity;
 
 
 @Getter // 클래스 내 모든 필드의 Getter 자동 생성
 @NoArgsConstructor // 기본 생성자 자동 추가 = public Posts() {}
 @Entity // 테이블과 링크될 클래스임을 나타냄 (Jpa)
 // => Entity 클래스에선 절대 Setter를 만들지 않는다. 정말 필요하다면 목적과 의도를 나타낼 수 있는 메소드를 따로 추가한다.
-public class Posts {
+public class Posts extends BaseTimeEntity {
 
     @Id // 해당 테이블의 pk(기본키)필드를 나타냄
     @GeneratedValue(strategy = GenerationType.IDENTITY) // PK의 생성 규칙
