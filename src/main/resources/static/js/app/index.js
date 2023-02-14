@@ -1,3 +1,5 @@
+// 호출 코드에 절대 경로가 "/"로 시작하는데
+//스프링 부트는 기본적으로 src/main/resourses/static에 위치한 자바스크립트,CSS,이미지 등 정적 파일들은 URL에서 /로 설정되기 때문.
 var main = {
     init : function () {
         var _this = this;
