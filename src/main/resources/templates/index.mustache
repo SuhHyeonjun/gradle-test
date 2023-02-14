@@ -22,7 +22,7 @@
             {{#posts}} <!-- posts라는 List를 순회 : for 구문과 동일 -->
                 <tr>
                     <td>{{id}}</td> <!-- 이중 중괄호 + 변수명 : List에서 뽑아낸 객체의 필드를 사용 -->
-                    <td>{{title}}</td>
+                    <td><a href="/posts/update/{{id}}">{{title}}</a></td> <!-- 타이틀을 클릭하면 해당 게시글의 수정화면으로 이동 -->
                     <td>{{author}}</td>
                     <td>{{modifiedDate}}</td>
                 </tr>

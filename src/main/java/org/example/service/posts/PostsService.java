@@ -37,11 +37,17 @@ public class PostsService {
         return new PostsResponseDto(entity);
     }
 
-    // (readOnly = true) 옵션은 ㄷ
+    // (readOnly = true) 옵션은 CUD 작업이 동작하지 않아 조회 속도가 개선된다. (조회 기능만 할 경우 사용)
     @Transactional(readOnly = true)
     public List<PostsListResponseDto> findAllDesc() {
         return postsRepository.findAllDesc().stream()
                 .map(PostsListResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        Posts posts = postsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + id));
+        postsRepository.delete(posts);
     }
 }
