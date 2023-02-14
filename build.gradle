@@ -34,9 +34,10 @@ repositories {
 // 프로젝트 개발에 필요한 의존성들을 선언하는 곳
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
-    implementation('org.projectlombok:lombok')
-    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation('org.projectlombok:lombok') // 롬복 의존성 추가
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')  // DATA-JPA 의존성 추가
     implementation('com.h2database:h2') // 테스트용 데이터 베이스
+    implementation('org.springframework.boot:spring-boot-starter-mustache') // 머스테치 의존성 추가
 
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
