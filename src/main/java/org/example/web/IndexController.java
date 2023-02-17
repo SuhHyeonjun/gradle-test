@@ -35,7 +35,7 @@ public class IndexController {
         */
         // 세션에 저장된 값이 있을 때만 model에 userName 등록 (null이면 로그인 버튼이 보임)
         if (user != null) {
-            model.addAttribute("userName", user.getName());
+            model.addAttribute("name", user.getName());
         }
         return "index";
     }
