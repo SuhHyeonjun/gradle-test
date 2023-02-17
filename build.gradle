@@ -39,6 +39,7 @@ dependencies {
     implementation('com.h2database:h2') // 테스트용 데이터 베이스
     implementation('org.springframework.boot:spring-boot-starter-mustache') // 머스테치 의존성 추가
     implementation('org.springframework.boot:spring-boot-starter-oauth2-client') // 스프링 시큐리티 의존성
+    implementation('org.springframework.session:spring-session-jdbc') // 세션 저장소 db 사용 의존성
 
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
