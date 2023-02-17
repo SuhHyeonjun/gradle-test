@@ -10,6 +10,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+// @LoginUser 어노테이션 클래스를 사용하기 위한 환경 구성
 @RequiredArgsConstructor
 @Component // 개발자가 직접 작성한 Class를 Bean으로 등록
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
