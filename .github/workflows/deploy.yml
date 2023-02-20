@@ -27,12 +27,11 @@ jobs:
           distribution: 'temurin'
 
       - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew  # gradlew에 대한 권한설정 명령어 (runner에서 실행)
+        run: chmod +x ./gradlew 
         shell: bash
 
       - name: Build with Gradle
-        run: ./gradlew clean -x test build
-        shell: bash
+        run: ./gradlew clean build
 
       - name: Get current time
         uses: 1466587594/get-current-time@v2
@@ -51,17 +50,13 @@ jobs:
 
       # Jar 파일 복사
       - name: Copy Jar
-        run: cp ./build/libs/*.jar ./deploy
+        run: cp ./build/libs/*.jar ./deploy/
             
       # 파일 압축
       - name: Make zip file
-        run: zip -r ./$PROJECT_NAME.zip ./deploy
+        run: zip -r ./spring-gitaction-s3.zip ./deploy
 
-      # 아래 부분이 개인 설정
-      - name: Make zip file
-        run: zip -r ./$PROJECT_NAME.zip .
-        shell: bash
-
+      # S3 버킷으로 Copy
       - name: Deploy
         uses: aws-actions/configure-aws-credentials@v1
         with:
