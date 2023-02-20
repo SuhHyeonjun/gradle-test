@@ -1,9 +1,4 @@
-env:
-  S3_BUCKET_NAME: spring-gitaction-s3
-  PROJECT_NAME: gradle-test
-
 name: deploy
-
 
 on:
   release:
@@ -14,10 +9,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # runner
+    runs-on: ubuntu-latest # 실행 환경 지정
 
     steps:
-      - name: Checkout  # step 이름 지정
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Set up JDK 11
@@ -26,10 +21,12 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
+			# gradlew 실행권한 부여
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew 
         shell: bash
 
+			# Build
       - name: Build with Gradle
         run: ./gradlew clean build
 
@@ -65,4 +62,4 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 --acl private ./spring-gitaction-s3.zip s3://spring-gitaction-s3/
+        run: aws s3 cp --region ap-northeast-2 ./spring-gitaction-s3.zip s3://spring-gitaction-s3/
