@@ -4,6 +4,7 @@ env:
 
 name: deploy
 
+
 on:
   release:
     types: [push]
@@ -46,18 +47,22 @@ jobs:
       - name: Show Current Time
         run: echo "CurrentTime=${{steps.current-time.outputs.formattedTime}}"
         shell: bash
-        
-      # 디렉토리 생성
-      - name: Make Directory
-        run: mkdir -p deploy
 
-      # Jar 파일 복사
-      - name: Copy Jar
-        run: cp ./build/libs/*.jar ./deploy
-            
-      # 파일 압축
+      - name: Generate deployment package
+        run: |
+          mkdir -p before-deploy
+          cp scripts/*.sh before-deploy/
+          cp appspec.yml before-deploy/
+          cp build/libs/*.jar before-deploy/
+          cd before-deploy && zip -r before-deploy *
+          cd ../ && mkdir -p deploy
+          mv before-deploy/before-deploy.zip deploy/$PROJECT_NAME.zip
+        shell: bash
+
+      # 아래 부분이 개인 설정
       - name: Make zip file
-        run: zip -r ./$PROJECT_NAME.zip ./deploy
+        run: zip -r ./$PROJECT_NAME.zip .
+        shell: bash
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -67,4 +72,4 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./$PROJECT_NAME.zip s3://$PROJECT_NAME/
+        run: aws s3 cp --region ap-northeast-2 ./deploy/$PROJECT_NAME.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$PROJECT_NAME.zip
