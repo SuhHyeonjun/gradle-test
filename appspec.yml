@@ -1,0 +1,10 @@
+# CodeDeploy 버전
+version: 0.0
+
+# 배포할 서버의 운영체제
+os: linux
+
+files:
+  - source: / # CodeDeploy에서 전달해 준 파일 중 destination으로 이동시킬 대상을 지정 (루트 경로 : 전체 파일)
+    destination: /home/ec2-user/app/step2/zip/ # source에서 지정된 파일을 받을 위치
+    overwrite: yes # 기존 파일들을 덮어 쓰기
