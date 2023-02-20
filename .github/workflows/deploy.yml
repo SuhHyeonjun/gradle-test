@@ -48,12 +48,24 @@ jobs:
             cp build/libs/*.jar before-deploy/
             cd before-deploy && zip -r before-deploy *
             cd ../ && mkdir -p deploy
-            mv before-deploy/before-deploy.zip deploy/$PROJECT_NAME.zip
+            mv before-deploy/before-deploy.zip deploy/gradle-test.zip
         shell: bash
 
       - name: Make zip file
-        run: zip -r ./$PROJECT_NAME.zip .         # (12)
+        run: zip -r ./gradle-test.zip .         # (12)
         shell: bash
+
+      # 현재 위치
+      - name: ls
+        run: ls
+
+      # 현재 경로
+      - name: pwd
+        run: pwd
+
+      # ls build
+      - name: ls build
+        run: ls ./build
 
       # S3 버킷으로 Copy
       - name: Deliver to AWS S3
