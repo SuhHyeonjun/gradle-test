@@ -50,7 +50,7 @@ jobs:
             
       # 파일 압축
       - name: Make zip file
-        run: zip -r ./spring-gitaction-s3.zip ./deploy
+        run: zip -r ./gradle-test.zip ./deploy
 
       # S3 버킷으로 Copy
       - name: Deliver to AWS S3
@@ -61,7 +61,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./spring-gitaction-s3.zip s3://spring-gitaction-s3/
+        run: aws s3 cp --region ap-northeast-2 ./gradle-test.zip s3://spring-gitaction-s3/
 
       # CodeDeploy - Deploy
       - name: Deploy
