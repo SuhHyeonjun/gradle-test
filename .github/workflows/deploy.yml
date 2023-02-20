@@ -55,18 +55,6 @@ jobs:
         run: zip -r ./gradle-test.zip .         # (12)
         shell: bash
 
-      # 현재 위치
-      - name: ls -al
-        run: ls -al
-
-      # 현재 경로
-      - name: pwd
-        run: pwd
-
-      # ls build
-      - name: ls Deploy
-        run: ls -al ./deploy
-
       # S3 버킷으로 Copy
       - name: Deliver to AWS S3
         uses: aws-actions/configure-aws-credentials@v1

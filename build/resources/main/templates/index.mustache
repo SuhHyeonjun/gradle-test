@@ -6,16 +6,16 @@
         <div class="row">
             <div class="col-md-6">
                 <a href="/posts/save" role="button" class="btn btn-primary">글 등록하러 가기</a>
-                {{#userName}} <!-- userName이 존재하는 경우 -->
-                    Logged in as : <span id="user">{{userName}}</span>
+                {{#name}} <!-- name이 존재하는 경우 -->
+                    Logged in as : <span id="user">{{name}}</span>
                 <a href="/logout" role="button" class="btn btn-info active">Logout</a>
-                {{/userName}}
-                {{^userName}} <!-- userName이 존재하지 않는 경우 -->
+                {{/name}}
+                {{^name}} <!-- name이 존재하지 않는 경우 -->
                     <a href="/oauth2/authorization/google" role="button" class="btn btn-success active">
                         Google Login</a>
                     <a href="/oauth2/authorization/naver" role="button" class="btn btn-secondary active">
                         Naver Login</a>
-                {{/userName}}
+                {{/name}}
             </div>
         </div>
     <br>
