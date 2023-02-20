@@ -19,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()// URL 별 권환 관리 설정 (authorizeRequests()가 선언되어야만 anyMatchers옵션 사용가능)
                     .authorizeRequests()
                     // antMatchers를 통해 권환 관리 대상을 지정하고, URL,HTTP 메소드별 관리 가능
-                    .antMatchers("/", "/css/**", "/images/**", "/js**", "/h2-console/**").permitAll() // "/"등 지정된 URL들은 permitAll() 옵션으로 전체 열람 권한 부여
+                    .antMatchers("/", "/css/**", "/images/**", "/js**", "/h2-console/**", "/profile").permitAll() // "/"등 지정된 URL들은 permitAll() 옵션으로 전체 열람 권한 부여
                     .antMatchers("/api/v1/**").hasRole(Role.USER.name()) // 해당 주소는 USER 권한을 가진 사람만 가능
                     .anyRequest().authenticated() // 설정된 값들 이외 나머지 URL들은 모두 인증된 사용자(로그인한)들에게만 허용
                 .and()
