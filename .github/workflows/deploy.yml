@@ -56,16 +56,16 @@ jobs:
         shell: bash
 
       # 현재 위치
-      - name: ls
-        run: ls
+      - name: ls -al
+        run: ls -al
 
       # 현재 경로
       - name: pwd
         run: pwd
 
       # ls build
-      - name: ls build
-        run: ls ./build
+      - name: ls Deploy
+        run: ls -al ./deploy
 
       # S3 버킷으로 Copy
       - name: Deliver to AWS S3
@@ -78,15 +78,12 @@ jobs:
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./deploy/gradle-test.zip s3://spring-gitaction-s3/gradle-test/gradle-test.zip
 
-      # CodeDeploy - Deploy
-      - name: Deploy
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Code Deploy
         run: |
           aws deploy create-deployment \
           --application-name spring-deploy \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name spring-deploy-group \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=spring-gitaction-s3,bundleType=zip,key=gradle-test.zip \
+          --s3-location bucket=spring-gitaction-s3,bundleType=zip,key=gradle-test/gradle-test.zip \
           --region ap-northeast-2
