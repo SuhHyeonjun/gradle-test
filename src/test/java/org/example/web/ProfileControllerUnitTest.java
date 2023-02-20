@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 import org.springframework.mock.env.MockEnvironment;
 
+// 이 컨트롤러는 MockEnvironment를 이용해 스프링 환경이 필요 없다.
 public class ProfileControllerUnitTest {
 
     @Test
