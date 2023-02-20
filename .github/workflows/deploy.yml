@@ -1,60 +1,73 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+env:
+  S3_BUCKET_NAME: spring-gitaction-s3
+  PROJECT_NAME: gradle-test
 
-name: Java CI with Gradle
+name: deploy
 
 on:
+  release:
+    types: [push]
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches: [master]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # runner
+    permissions:
+      contents: read
+      packages: write
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    
-    - name: Set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x ./gradlew
-      shell: bash
-        
-    - name: Build with Gradle
-      run: ./gradlew clean build
-      shell: bash
-      
-    # 디렉토리 생성
-    - name: Make Directory
-      run: mkdir -p deploy
+      - name: Checkout  # step 이름 지정
+        uses: actions/checkout@v3
 
-    # Jar 파일 복사
-    - name: Copy Jar
-      run: cp ./build/libs/*.jar ./deploy
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
 
-    # 파일 압축
-    - name: Make zip file
-      run: zip -r ./gradle-test ./deploy
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew  # gradlew에 대한 권한설정 명령어 (runner에서 실행)
+        shell: bash
 
-    # Deploy
-    - name: Deploy
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ inputs.AWS_ACCESS_KEY_ID ||  secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ inputs.AWS_SECRET_ACCESS_KEY ||  secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-northeast-2
+      - name: Build with Gradle
+        run: ./gradlew clean -x test build
+        shell: bash
 
-    - name: Upload to S3
-      run: aws s3 cp --region ap-northeast-2 --acl private ./gradle-test.zip s3://gradle-test/
+      - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DDTHH-mm-ss
+          utcOffset: "+09:00"
 
+      - name: Show Current Time
+        run: echo "CurrentTime=${{steps.current-time.outputs.formattedTime}}"
+        shell: bash
+
+      - name: Generate deployment package
+        run: |
+          mkdir -p before-deploy
+          cp scripts/*.sh before-deploy/
+          cp appspec.yml before-deploy/
+          cp build/libs/*.jar before-deploy/
+          cd before-deploy && zip -r before-deploy *
+          cd ../ && mkdir -p deploy
+          mv before-deploy/before-deploy.zip deploy/$PROJECT_NAME.zip
+        shell: bash
+
+      - name: Make zip file
+        run: zip -r ./$PROJECT_NAME.zip .
+        shell: bash
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./deploy/$PROJECT_NAME.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$PROJECT_NAME.zip
