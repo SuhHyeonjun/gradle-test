@@ -40,17 +40,20 @@ jobs:
         run: echo "CurrentTime=${{steps.current-time.outputs.formattedTime}}"
         shell: bash
         
-      # 디렉토리 생성
-      - name: Make Directory
-        run: mkdir -p deploy
+      - name: Generate deployment package
+        run: |
+            mkdir -p before-deploy
+            cp scripts/*.sh before-deploy/
+            cp appspec.yml before-deploy/
+            cp build/libs/*.jar before-deploy/
+            cd before-deploy && zip -r before-deploy *
+            cd ../ && mkdir -p deploy
+            mv before-deploy/before-deploy.zip deploy/$PROJECT_NAME.zip
+        shell: bash
 
-      # Jar 파일 복사
-      - name: Copy Jar
-        run: cp ./build/libs/*.jar ./deploy/
-            
-      # 파일 압축
       - name: Make zip file
-        run: zip -r ./gradle-test.zip ./deploy
+        run: zip -r ./$PROJECT_NAME.zip .         # (12)
+        shell: bash
 
       # S3 버킷으로 Copy
       - name: Deliver to AWS S3
@@ -73,5 +76,5 @@ jobs:
           --application-name spring-deploy \
           --deployment-group-name spring-deploy-group \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=spring-gitaction-s3,bundleType=zip,key=spring-gitaction-s3.zip \
+          --s3-location bucket=spring-gitaction-s3,bundleType=zip,key=gradle-test.zip \
           --region ap-northeast-2
