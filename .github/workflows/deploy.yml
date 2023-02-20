@@ -21,12 +21,11 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-			# gradlew 실행권한 부여
+	# gradlew 실행권한 부여
       - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew 
-        shell: bash
-
-			# Build
+        run: chmod +x ./gradlew
+	
+	# Build
       - name: Build with Gradle
         run: ./gradlew clean build
 
@@ -41,19 +40,19 @@ jobs:
         run: echo "CurrentTime=${{steps.current-time.outputs.formattedTime}}"
         shell: bash
         
-      # 디렉토리 생성
+      	# 디렉토리 생성
       - name: Make Directory
         run: mkdir -p deploy
 
-      # Jar 파일 복사
+      	# Jar 파일 복사
       - name: Copy Jar
         run: cp ./build/libs/*.jar ./deploy/
             
-      # 파일 압축
+      	# 파일 압축
       - name: Make zip file
         run: zip -r ./spring-gitaction-s3.zip ./deploy
 
-      # S3 버킷으로 Copy
+      	# S3 버킷으로 Copy
       - name: Deploy
         uses: aws-actions/configure-aws-credentials@v1
         with:
