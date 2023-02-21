@@ -48,11 +48,11 @@ jobs:
             cp build/libs/*.jar before-deploy/
             cd before-deploy && zip -r before-deploy *
             cd ../ && mkdir -p deploy
-            mv before-deploy/before-deploy.zip deploy/gradle-test.zip
+            mv before-deploy/before-deploy.zip deploy/posting-web.zip
         shell: bash
 
       - name: Make zip file
-        run: zip -r ./gradle-test.zip .         # (12)
+        run: zip -r ./posting-web.zip .         # (12)
         shell: bash
 
       # S3 버킷으로 Copy
@@ -64,7 +64,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./deploy/gradle-test.zip s3://spring-gitaction-s3/gradle-test/gradle-test.zip
+        run: aws s3 cp --region ap-northeast-2 ./deploy/posting-web.zip s3://spring-gitaction-s3/posting-web/posting-web.zip
 
       - name: Code Deploy
         run: |
@@ -73,5 +73,5 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name spring-deploy-group \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=spring-gitaction-s3,bundleType=zip,key=gradle-test/gradle-test.zip \
+          --s3-location bucket=spring-gitaction-s3,bundleType=zip,key=posting-web/posting-web.zip \
           --region ap-northeast-2
